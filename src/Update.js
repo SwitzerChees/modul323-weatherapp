@@ -7,14 +7,13 @@ export const MSGS = {
   HTTP_SUCCESS: "HTTP_SUCCESS",
   HTTP_ERROR: "HTTP_ERROR",
   CLEAR_ERROR: "CLEAR_ERROR",
+  TOOGLE_LOCATION: "TOOGLE_LOCATION",
 };
 
 const APPID = "88ee15a329c957d8d083d331cbf60491";
 
 function weatherUrl(city) {
-  return `http://api.openweathermap.org/data/2.5/weather?q=${encodeURI(
-    city
-  )}&units=metric&APPID=${APPID}`;
+  return `http://api.openweathermap.org/data/2.5/weather?q=${encodeURI(city)}&units=metric&APPID=${APPID}`;
 }
 
 export function locationInputMsg(location) {
@@ -45,6 +44,13 @@ function httpErrorMsg(error) {
   return {
     type: MSGS.HTTP_ERROR,
     error,
+  };
+}
+
+export function toggleLocationMsg(id) {
+  return {
+    type: MSGS.TOOGLE_LOCATION,
+    id,
   };
 }
 
@@ -91,11 +97,7 @@ function update(msg, model) {
     case MSGS.HTTP_SUCCESS: {
       const { id, response } = msg;
       const { locations } = model;
-      const { temp, temp_min, temp_max } = R.pathOr(
-        {},
-        ["data", "main"],
-        response
-      );
+      const { temp, temp_min, temp_max } = R.pathOr({}, ["data", "main"], response);
       const updatedLocations = R.map((location) => {
         if (location.id === id) {
           return {
@@ -118,6 +120,20 @@ function update(msg, model) {
     }
     case MSGS.CLEAR_ERROR: {
       return { ...model, error: null };
+    }
+    case MSGS.TOOGLE_LOCATION: {
+      const { id } = msg;
+      const { locations } = model;
+      const updatedLocations = R.map((location) => {
+        if (location.id === id) {
+          return {
+            ...location,
+            isActive: !location.isActive,
+          };
+        }
+        return location;
+      }, locations);
+      return { ...model, locations: updatedLocations };
     }
   }
   return model;

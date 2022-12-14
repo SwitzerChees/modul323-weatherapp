@@ -2,7 +2,7 @@ import * as R from "ramda";
 import hh from "hyperscript-helpers";
 import { h } from "virtual-dom";
 
-import { locationInputMsg, removeLocationMsg, addLocationMsg, clearErrorMsg } from "./Update";
+import { locationInputMsg, removeLocationMsg, addLocationMsg, clearErrorMsg, toggleLocationMsg } from "./Update";
 
 const { div, input, form, button, ul, li, i } = hh(h);
 const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
@@ -35,21 +35,26 @@ function cell(className, label, temp) {
 }
 
 const location = R.curry((dispatch, loc) => {
-  const { name, temp, low, high, id } = loc;
+  const { name, temp, low, high, id, isActive = false } = loc;
   const bgColor = temp > 20 ? "bg-green-100 hover:bg-green-200" : "bg-blue-100 hover:bg-blue-200";
-  return li({ className: `p-3 ${bgColor} flex justify-between` }, [
-    cell("grow", "Location", name),
-    cell("w-20", "Temp", temp),
-    cell("w-20", "Low", low),
-    cell("w-20", "High", high),
-    button(
-      {
-        className: "hover:bg-gray-200 p-2 rounded",
-        onclick: () => dispatch(removeLocationMsg(id)),
-      },
-      "🗑"
-    ),
-  ]);
+  const liComponents = [cell("grow", "Location", name), cell("w-20", "Temp", temp), cell("w-20", "Low", low), cell("w-20", "High", high)];
+  if (isActive) {
+    liComponents.push(
+      button(
+        {
+          className: "hover:bg-gray-200 p-2 rounded",
+          onclick: () => dispatch(removeLocationMsg(id)),
+        },
+        "🗑"
+      )
+    );
+  } else {
+    
+  }
+  return li(
+    { className: `p-3 ${bgColor} flex justify-between cursor-pointer`, onclick: () => dispatch(toggleLocationMsg(id)) },
+    liComponents
+  );
 });
 
 function locations(dispatch, model) {
