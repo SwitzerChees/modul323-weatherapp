@@ -1,5 +1,3 @@
-const axios = require("axios");
-
 const APPID = "88ee15a329c957d8d083d331cbf60491";
 
 async function main() {
@@ -9,8 +7,8 @@ async function main() {
 
   const url = weatherUrl("Bern");
   try {
-    const response = await axios({ url });
-    const { main } = response.data;
+    const response = await fetch(url);
+    const { main } = await response.json();
     const { temp, temp_min, temp_max } = main;
     console.log(temp, temp_min, temp_max);
     // dispatch(MSG.UPDATE_LOCATION, data)

@@ -10,7 +10,6 @@
   "author": "Patrick Michel",
   "license": "MIT",
   "devDependencies": {
-    "axios": "^1.2.1",
     "@babel/core": "^7.20.2",
     "@babel/preset-env": "^7.20.2",
     "babel-loader": "^9.1.0",

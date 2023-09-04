@@ -97,7 +97,7 @@ function update(msg, model) {
     case MSGS.HTTP_SUCCESS: {
       const { id, response } = msg;
       const { locations } = model;
-      const { temp, temp_min, temp_max } = R.pathOr({}, ["data", "main"], response);
+      const { temp, temp_min, temp_max } = R.pathOr({}, ["main"], response);
       const updatedLocations = R.map((location) => {
         if (location.id === id) {
           return {

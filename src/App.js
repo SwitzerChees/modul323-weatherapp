@@ -1,7 +1,6 @@
-import { diff, patch } from 'virtual-dom';
-import createElement from 'virtual-dom/create-element';
-import axios from 'axios';
-import * as R from 'ramda';
+import { diff, patch } from "virtual-dom";
+import createElement from "virtual-dom/create-element";
+import * as R from "ramda";
 
 function app(initModel, update, view, node) {
   let model = initModel;
@@ -10,7 +9,7 @@ function app(initModel, update, view, node) {
   node.appendChild(rootNode);
   function dispatch(msg) {
     const updates = update(msg, model);
-    const isArray = R.type(updates) === 'Array';
+    const isArray = R.type(updates) === "Array";
     model = isArray ? updates[0] : updates;
     const command = isArray ? updates[1] : null;
     httpEffects(dispatch, command);
@@ -21,12 +20,19 @@ function app(initModel, update, view, node) {
   }
 }
 
-function httpEffects(dispatch, command) {
+async function httpEffects(dispatch, command) {
   if (command === null) {
     return;
   }
   const { request, successMsg } = command;
-  axios(request).then(response => dispatch(successMsg(response)));
+  try {
+    const response = await fetch(request.url);
+    const data = await response.json();
+    console.log(data);
+    dispatch(successMsg(data));
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export default app;
