@@ -49,7 +49,6 @@ const location = R.curry((dispatch, loc) => {
       )
     );
   } else {
-    
   }
   return li(
     { className: `p-3 ${bgColor} flex justify-between cursor-pointer`, onclick: () => dispatch(toggleLocationMsg(id)) },
@@ -66,7 +65,7 @@ function error(dispatch, model) {
   if (!model.error) {
     return null;
   }
-  return div({ className: "pa2 mv2 bg-red white relative" }, [
+  return div({ className: "pa2 mv2 bg-red white relative text-red-400" }, [
     model.error,
     i({
       className: "white absolute top-0 right-0 mt1 mr1 fa fa-remove pointer black-40",

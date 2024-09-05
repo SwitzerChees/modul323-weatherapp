@@ -24,14 +24,14 @@ async function httpEffects(dispatch, command) {
   if (command === null) {
     return;
   }
-  const { request, successMsg } = command;
+  const { request, successMsg, errorMsg } = command;
   try {
     const response = await fetch(request.url);
     const data = await response.json();
-    console.log(data);
     dispatch(successMsg(data));
   } catch (e) {
     console.log(e);
+    dispatch(errorMsg(e));
   }
 }
 
